@@ -12,9 +12,26 @@ type Pol = [Mon]
 
 
 -- remove monómios de quantificador 0 de um polinómio
+removeZero :: Pol -> Pol
 removeZero [] = []
 removeZero (x:xs)  | 0 == fst (x) = removeZero xs
-                   | otherwise = x : removeZero xs
+                   | otherwise    = x : removeZero xs
+
+-- (auxílio do fixExpZero) para quando a incógnita de expoente 0 é a única do monómio
+substituteExpZero :: [Var] -> [Var]
+substituteExpZero (xs) | (((length xs) == 1) && ((snd $ head xs) == 0)) = [(' ', 1)]        -- && ((fst $ head xs) /= ' ')
+                       | otherwise                                      = removeExpZero xs
+
+-- (auxílio do fixExpZero) para quando a incógnita de expoente 0 não é a única do monómio
+removeExpZero :: [Var] -> [Var]
+removeExpZero [] = []
+removeExpZero (x:xs) | snd x == 0   = removeExpZero xs
+                     | otherwise    = x : removeExpZero xs
+
+-- corrige todos os monómios de um polinómio que tenham um expoente 0 numa incógnita
+fixExpZero:: Pol -> Pol
+fixExpZero [] = []
+fixExpZero (x:xs) = (fst x, substituteExpZero $ snd x) : fixExpZero xs
 
 -- ordena os monómios de um polinómio por ordem alfabética de incógnitas, como critério secundário usa os expoentes
 sortPol [] = []
@@ -37,9 +54,9 @@ addMons[] = []
 addMons (x:xs) | findX x (xs) = addMons $ (addSome x (head xs)) : tail xs
                | otherwise    = x : addMons xs
 
--- normaliza polinómio
+-- normaliza o polinómio
 normalize :: Pol -> Pol
-normalize p = removeZero $ addMons $ sortPol p
+normalize p = fixExpZero $ removeZero $ addMons $ sortPol p
 
 -- soma dois polinómios
 addPols :: Pol -> Pol -> Pol
@@ -66,30 +83,46 @@ multVars (x:xs) | findVar x (xs) = multVars $ (addExp x (head xs)) : tail xs
 multMons :: Mon -> Mon-> Mon
 multMons x y = (fst x * fst y, multVars $ sort(snd x ++ snd y))
 
+-- (auxílio do multPols) multiplica recursivamente 2 polinómios
+multi :: Pol -> Pol -> Pol
+multi [] _ = []
+multi (x:xs) ys = [multMons x y| y <- ys] ++ multi xs ys
+
+-- normaliza e multiplica 2 polinónios
+multPols :: Pol -> Pol -> Pol
+multPols x y = normalize $ multi (normalize x) (normalize y)
+
+
+
 -- valores aleatórios usados em testes
 v1,v2,v3,v4,v5,v6,v7 :: Var
-m1,m2,m3 :: Mon
-p1 :: Pol
+m1,m2,m3,m4,m5,m6,m7,m8 :: Mon
+p1,p2,p3 :: Pol
 
-v1 = ('a', 1)
-v2 = ('a', 2)
+v1 = ('a', 0)
+v2 = ('a', 3)
 v3 = ('a', 3)
 v4 = ('a', 1)
 v5 = ('b', 2)
 v6 = ('b', 4)
 v7 = ('c', 1)
-m1 = (3, sort[v1])
+m1 = (3^0, sort[v1])
 m2 = (2, sort[v2])
 m3 = (4, sort[v3])
 m4 = (1, sort[v4])
 m5 = (2, sort[v6, v2, v7]) -- 2 a^2 b^4 c
 m6 = (3, sort[v7, v3, v5]) -- 3 a^3 b^2 c
-                           -- 6 a^5 b^6 c^2
+m7 = (3, sort[v7])
+m8 = (2, sort[v5, v3])
 
 p1 = [m1, m2, m3, m4]
+p2 = [m1, m3]    -- 3a + 4a^3
+p3 = [m7, m8]    -- 3c + 2(b^2a^3)
+p4 = [m5, m1]
+
 
 normalize_mon = normalize p1
 multa = multMons m5 m6
+multPolsa = multPols p1 (multPols p2 p3)
 
---multPol :: Pol -> Pol -> Pol
---multPol x y = normalize $
+--[(x,y,z) | x <- [1..a], y <- [1..a], z <- [1..a], x^2 + y^2 == z^2]
