@@ -1,6 +1,8 @@
 import Data.List
 import System.IO
 
+
+------------------------------------------------------------ TYPES---------------------------------------------------------------
 -- par de uma incógnita e respetivo expoente
 type Var = (Char, Int)   -- 1º elemento: incógnita
                          -- 2º elemento: expoente
@@ -11,6 +13,7 @@ type Mon = (Int, [Var])  -- 1º elemento: quantificador
 type Pol = [Mon]
 
 
+------------------------------------------------------NORMALIZAÇÃO E ADIÇÃO-------------------------------------------------------
 -- remove monómios de quantificador 0 de um polinómio
 removeZero :: Pol -> Pol
 removeZero [] = []
@@ -19,7 +22,7 @@ removeZero (x:xs)  | 0 == fst (x) = removeZero xs
 
 -- (auxílio do fixExpZero) para quando a incógnita de expoente 0 é a única do monómio
 substituteExpZero :: [Var] -> [Var]
-substituteExpZero (xs) | (((length xs) == 1) && ((snd $ head xs) == 0)) = [(' ', 1)]        -- && ((fst $ head xs) /= ' ')
+substituteExpZero (xs) | (((length xs) == 1) && ((snd $ head xs) == 0)) = [(' ', 1)]      -- && ((fst $ head xs) /= ' ')
                        | otherwise                                      = removeExpZero xs
 
 -- (auxílio do fixExpZero) para quando a incógnita de expoente 0 não é a única do monómio
@@ -62,6 +65,8 @@ normalize p = fixExpZero $ removeZero $ addMons $ sortPol p
 addPols :: Pol -> Pol -> Pol
 addPols x y = normalize(x ++ y)
 
+
+-----------------------------------------------------------MULTIPLICAÇÃO-------------------------------------------------------
 -- (auxílio do multMons) descobre se o monómio tem algum var x que possa ser somado ao var n
 findVar :: Var -> [Var] -> Bool
 findVar _ [] = False
@@ -93,6 +98,38 @@ multPols :: Pol -> Pol -> Pol
 multPols x y = normalize $ multi (normalize x) (normalize y)
 
 
+-----------------------------------------------------------DERIVAÇÃO---------------------------------------------------------
+-- (auxílio do derivatePol) determina se existe na lista existe um var com incógnita n
+findN :: Char -> [Var] -> Bool
+findN _ [] = False
+findN n (x:xs)
+  | n == fst x = True
+  | otherwise  = findN n xs
+
+-- (auxílio do derivatePol) retorna a lista de vars sem o var com a incógnita n
+removeN :: Char -> [Var] -> [Var]
+removeN _ [] = []
+removeN n (x:xs)   | n == fst (x) = removeN n xs
+                   | otherwise    = x : removeN n xs
+
+-- (auxílio do derivatePol) retorna o expoente do var da lista que tem a incógnita n (já sabemos que ele existe algures na lista)
+getExpN :: Char -> [Var] -> Int
+getExpN _ [] = -69
+getExpN n (x:xs)
+  | n == fst x = snd x
+  | otherwise  = getExpN n xs
+
+-- (auxílio do derivatePol) deriva um monómio por uma incógnita
+derivateMon :: Char -> Mon -> Mon
+derivateMon n x | not (findN n $ snd x)                     = (0, [(' ', 1)])
+                | (findN n $ snd x) && length (snd x) == 1  = (fst x * (snd $ head $ snd x), [(n, (snd $ head $ snd x) - 1)])
+                | (findN n $ snd x) && length (snd x) > 1   = (fst x * (getExpN n $ snd x), sort $ (n, (getExpN n $ snd x) - 1) : (removeN n $ snd x))
+--              | (length (snd x) == 1 && (fst $ head $ snd x) == n && (snd $ head $ snd x) == 1) = (fst x, [(' ', 1)])
+--              | otherwise = x
+
+-- deriva um polinómio por uma incógnita
+derivatePol :: Char -> Pol -> Pol
+derivatePol n xs = normalize [derivateMon n x | x <- (normalize xs)]
 
 -- valores aleatórios usados em testes
 v1,v2,v3,v4,v5,v6,v7 :: Var
@@ -100,13 +137,13 @@ m1,m2,m3,m4,m5,m6,m7,m8 :: Mon
 p1,p2,p3 :: Pol
 
 v1 = ('a', 0)
-v2 = ('a', 3)
+v2 = ('a', 1)
 v3 = ('a', 3)
-v4 = ('a', 1)
+v4 = ('b', 4)
 v5 = ('b', 2)
-v6 = ('b', 4)
+v6 = ('b', 1)
 v7 = ('c', 1)
-m1 = (3^0, sort[v1])
+m1 = (3, sort[v1])
 m2 = (2, sort[v2])
 m3 = (4, sort[v3])
 m4 = (1, sort[v4])
@@ -114,6 +151,7 @@ m5 = (2, sort[v6, v2, v7]) -- 2 a^2 b^4 c
 m6 = (3, sort[v7, v3, v5]) -- 3 a^3 b^2 c
 m7 = (3, sort[v7])
 m8 = (2, sort[v5, v3])
+
 
 p1 = [m1, m2, m3, m4]
 p2 = [m1, m3]    -- 3a + 4a^3
