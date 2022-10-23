@@ -36,6 +36,11 @@ fixExpZero:: Pol -> Pol
 fixExpZero [] = []
 fixExpZero (x:xs) = (fst x, substituteExpZero $ snd x) : fixExpZero xs
 
+-- ordena alfabeticamente as incógnitas dentro de cada monómio do polinómio
+sortVars :: Pol -> Pol
+sortVars[] = []
+sortVars (x:xs) = (fst x, sort(snd x)) : sortVars xs
+
 -- ordena os monómios de um polinómio por ordem alfabética de incógnitas, como critério secundário usa os expoentes
 sortPol [] = []
 sortPol p = sortOn(head . snd) p
@@ -59,7 +64,7 @@ addMons (x:xs) | findX x (xs) = addMons $ (addSome x (head xs)) : tail xs
 
 -- normaliza o polinómio
 normalize :: Pol -> Pol
-normalize p = fixExpZero $ removeZero $ addMons $ sortPol p
+normalize p = removeZero $ addMons $ sortPol $ sortVars $ fixExpZero p
 
 -- soma dois polinómios
 addPols :: Pol -> Pol -> Pol
@@ -106,7 +111,7 @@ findN n (x:xs)
   | n == fst x = True
   | otherwise  = findN n xs
 
--- (auxílio do derivatePol) retorna a lista de vars sem o var com a incógnita n
+-- (auxílio do derivatePol) retorna a lista de vars sem o var de incógnita n
 removeN :: Char -> [Var] -> [Var]
 removeN _ [] = []
 removeN n (x:xs)   | n == fst (x) = removeN n xs
@@ -131,6 +136,8 @@ derivateMon n x | not (findN n $ snd x)                     = (0, [(' ', 1)])
 derivatePol :: Char -> Pol -> Pol
 derivatePol n xs = normalize [derivateMon n x | x <- (normalize xs)]
 
+
+---------------------------------------VALORES ÚTEIS PARA TESTAGEM RÁPIDA NO MOMENTO------------------------------------------
 -- valores aleatórios usados em testes
 v1,v2,v3,v4,v5,v6,v7 :: Var
 m1,m2,m3,m4,m5,m6,m7,m8 :: Mon
@@ -157,10 +164,9 @@ p1 = [m1, m2, m3, m4]
 p2 = [m1, m3]    -- 3a + 4a^3
 p3 = [m7, m8]    -- 3c + 2(b^2a^3)
 p4 = [m5, m1]
+p5 = [m3]
 
 
 normalize_mon = normalize p1
 multa = multMons m5 m6
 multPolsa = multPols p1 (multPols p2 p3)
-
---[(x,y,z) | x <- [1..a], y <- [1..a], z <- [1..a], x^2 + y^2 == z^2]
