@@ -90,7 +90,7 @@ display_rows([Row|Rest], Size) :-
 % Predicate to display a row
 display_row(Row, Column, Size) :-
     % Check if it is the first row
-    (Column = Size
+    (Column is Size
      -> true % Do not display the row separator
      ;  (left_grid(LeftGrid),
          center_grid(CenterGrid),
@@ -107,7 +107,7 @@ display_row(Row, Column, Size) :-
          nl)
     ),
     % Display the row label
-    (Column = Size
+    (Column is Size
      -> write(Column);
         write(Column)
     ),
