@@ -2,6 +2,7 @@
 
 %importing modules
 :-consult('inputparser.pl').
+:-consult('pvp.pl').
 
 %clear screen 
 clear :- write('\e[2J').

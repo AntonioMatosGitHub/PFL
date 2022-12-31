@@ -16,7 +16,9 @@ convert(1, '\x25cb\').
 convert(0, ' ').
 
 % Predicate to display the board
-display_board(Board) :-
+display_board(GameState) :-
+    % Get the board from the game state
+    GameState = Board-_,
     % Get the size of the board
     length(Board, Rows),
     (Rows > 0
