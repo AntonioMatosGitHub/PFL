@@ -1,4 +1,4 @@
-% is piece on sight 
+% Check if a certain piece is in sight 
 friendly_piece(R, C, PR, PC, Player,Piece) :- 
     %if player is the owner of piece
     Piece =:= Player,
@@ -9,11 +9,7 @@ friendly_piece(R, C, PR, PC, Player,Piece) :-
     % If they share any diagonay
     abs(R - PR) =:= abs(C - PC), !).
 
-
-
 % Predicate to count the number of friendly pieces in sight
-
-
 count_friendly_pieces(Board, Row, Column, Player, Count) :-
     length(Board, Size),
     findall(X-Y,  
@@ -35,7 +31,7 @@ distance(Row, Column, Distance, Size) :-
     Distance_to_Start is min(Row, Column),
     Distance is min(Distance_to_End,Distance_to_Start).
 
-/* Replace */
+% replace 
 /*
   replace(?List, ?Index, ?OldElem, ?NewElem, ?NewList).
   - Create NewList/List with NewElem/OldElem at Index of List/NewList (replacing OldElem/NewElem)
@@ -46,6 +42,8 @@ replace(List, Index, OldElem, NewElem, NewList) :-
    nth0(Index, List, OldElem, Transfer),
    nth0(Index, NewList, NewElem, Transfer).
 
+
+% replace_board_cell
 /*
   replace_board_cell(?Position, ?Cell, ?OldBoard, ?NewBoard).
     Position = Line:Column
@@ -56,7 +54,8 @@ replace_board_cell(Line:Column, Cell, OldBoard, NewBoard) :-
   replace(OldBoard, Line, OldRow, NewRow, NewBoard),
   replace(OldRow, Column, _, Cell, NewRow).
 
-/* congratulate winner of the game  */
+
+% congratulate winner of the game
 congratulate_winner(Player) :-
     write('Congratulations, Player '),
     write(Player),

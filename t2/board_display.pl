@@ -11,8 +11,8 @@ bottom_left_corner('\x2514\').
 top_right_corner('\x2510\').
 
 % Predicate to convert an element to its corresponding character
-convert(-1, '\x25b2\').
-convert(1, '\x25cb\').
+convert(-1, '\x2616\').
+convert(1, '\x2617\').
 convert(0, ' ').
 
 % Predicate to display the board
@@ -113,7 +113,12 @@ display_row(Row, Column, Size) :-
      -> write(Column);
         write(Column)
     ),
-    write('  '),
+    write(Column);
+    (Column < 10
+     -> write('  ');
+    write(' ')
+    ),
+    /*write('  '),*/
     vertical_separator(VerticalSeparator),
     write(VerticalSeparator),
     % Display the row elements

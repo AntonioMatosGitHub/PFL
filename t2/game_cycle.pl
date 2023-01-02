@@ -30,6 +30,8 @@
 %         )
 %     ).
 
+
+%game_cycle
 /*
   game_cycle(+GameState-Players).
     - Handle game cycle

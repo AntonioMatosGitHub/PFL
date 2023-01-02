@@ -42,10 +42,10 @@ make_move(GameState, Move, NewGameState) :-
     write(NewBoard), nl,
     NewGameState = NewBoard-NewPlayer.
 
-
+% Ask player to choose a move
 choose_move(GameState, human, Move):-
   GameState = Board-Player,
   convert(Player, Symbol),
-  format('It\'s ~p\'s turn.', [Symbol]), nl,
+  format('\nIt\'s ~p\'s turn.', [Symbol]), nl,
   read_move(Board,Move).
 

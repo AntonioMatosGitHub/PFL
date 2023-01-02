@@ -8,6 +8,7 @@
 :- use_module('states.pl').
 :- use_module('game_cycle.pl').
 
+%start pvp game with a board of a certain size
 pvp(Size):-
   initial_state(Size, GameState),
   display_board(GameState),

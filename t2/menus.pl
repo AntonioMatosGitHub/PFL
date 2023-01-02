@@ -26,8 +26,9 @@ main_menu :-
   write('|                                                            | \n'),   
   write('|                      1. Start Game PvP                     | \n'),
   write('|                      2. Start Game PvE                     | \n'), 
-  write('|                      3. Game Rules                         | \n'),  
-  write('|                      4. Exit Game                          | \n'),
+  write('|                      3. Start Game EvE                     | \n'),  
+  write('|                      4. Game Rules                         | \n'),  
+  write('|                      5. Exit Game                          | \n'),
   write('|                                                            | \n'),
   write('-------------------------------------------------------------- \n').                                 
 
@@ -38,10 +39,10 @@ pvp_menu :-
   game_logo, nl,
   write('--------------------------- PvP Menu ------------------------- \n'),
   write('|                                                            | \n'),   
-  write('|                      1. Board size 7x7                     | \n'),
-  write('|                      2. Board Size 9x9                     | \n'),
-  write('|                      3. Board Size 11x11                   | \n'),   
-  write('|                      4. Exit Game                          | \n'),
+  write('|                    1. Small Board   (7x7)                  | \n'),
+  write('|                    2. Regular Board (9x9)                  | \n'),
+  write('|                    3. Big Board    (11x11)                 | \n'),   
+  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -52,10 +53,10 @@ pve_menu_1 :-
   game_logo, nl,
   write('--------------------------- PvE Menu ------------------------- \n'),
   write('|                                                            | \n'),   
-  write('|                      1. Board size 7x7                     | \n'),
-  write('|                      2. Board Size 9x9                     | \n'),
-  write('|                      3. Board Size 11x11                   | \n'),   
-  write('|                      4. Exit Game                          | \n'),
+  write('|                    1. Small Board   (7x7)                  | \n'),
+  write('|                    2. Regular Board (9x9)                  | \n'),
+  write('|                    3. Big Board    (11x11)                 | \n'),   
+  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -66,10 +67,23 @@ pve_menu_2 :-
   game_logo, nl,
   write('--------------------------- PvE Menu ------------------------- \n'),
   write('|                                                            | \n'),   
-  write('|                        1. Easy                             | \n'),
-  write('|                        2. Medium                           | \n'),
-  write('|                        3. Hard                             | \n'),   
-  write('|                        4. Exit Game                        | \n'),
+  write('|                         1. Dumb AI                         | \n'),
+  write('|                         2. Smart AI                        | \n'), 
+  /*write('|                         3. Exit Game                       | \n'),*/
+  write('|                                                            | \n'),
+  write('|                                                    0.Back  | \n'),
+  write('-------------------------------------------------------------- \n').
+
+%EvE menu 1 board size
+eve_menu :- 
+  clear,
+  game_logo, nl,
+  write('--------------------------- EvE Menu ------------------------- \n'),
+  write('|                                                            | \n'),   
+  write('|                    1. Small Board   (7x7)                  | \n'),
+  write('|                    2. Regular Board (9x9)                  | \n'),
+  write('|                    3. Big Board    (11x11)                 | \n'),   
+  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -99,8 +113,8 @@ game_over :-
   write('|  The game is over!                                         | \n'),
   write('|  Do you want to play again?                                | \n'),
   write('|                                                            | \n'),
-  write('|                      1. Yes                                | \n'),
-  write('|                      2. No                                 | \n'),
+  write('|                            1. Yes                          | \n'),
+  write('|                            2. No                           | \n'),
   write('|                                                            | \n'),
   write('-------------------------------------------------------------- \n').
 
@@ -108,29 +122,50 @@ game_over :-
 main_menu_selection :-
   main_menu,
   write('Please select an option: '),
-  read_number(1, 4, Option),
+  read_number(1, 5, Option),
   main_menu_selection(Option).
 
 %pvp_menu selection interface
 pvp_menu_selection :-
   pvp_menu,
   write('Please select an option: '),
-  read_number(0, 4, Option),
+  read_number(0, 3, Option),
   pvp_menu_selection(Option).
 
 %pve_menu_1 selection interface
 pve_menu_1_selection :-
   pve_menu_1,
   write('Please select an option: '),
-  read_number(0, 4, Option),
+  read_number(0, 3, Option),
   pve_menu_1_selection(Option).
 
-%pve_menu_2 selection interface
-pve_menu_2_selection :-
+%pve_menu_2 selection interface for a 7x7 board
+pve_menu_2_selection7 :-
   pve_menu_2,
   write('Please select an option: '),
-  read_number(0, 4, Option),
-  pve_menu_2_selection(Option).
+  read_number(0, 2, Option),
+  pve_menu_2_selection7(Option).
+
+%pve_menu_2 selection interface for a 9x9 board
+pve_menu_2_selection9 :-
+  pve_menu_2,
+  write('Please select an option: '),
+  read_number(0, 2, Option),
+  pve_menu_2_selection9(Option).
+
+%pve_menu_2 selection interface for a 11x11 board
+pve_menu_2_selection11 :-
+  pve_menu_2,
+  write('Please select an option: '),
+  read_number(0, 2, Option),
+  pve_menu_2_selection11(Option).
+
+%eve_menu selection interface
+eve_menu_selection :-
+  eve_menu,
+  write('Please select an option: '),
+  read_number(0, 3, Option),
+  eve_menu_selection(Option).
 
 %game_rules selection interface
 game_rules_selection :-
@@ -149,29 +184,38 @@ game_over_selection :-
 %main menu selection
 main_menu_selection(1) :- pvp_menu_selection.
 main_menu_selection(2) :- pve_menu_1_selection.
-main_menu_selection(3) :- game_rules_selection.
-main_menu_selection(4) :- halt.
+main_menu_selection(3) :- eve_menu_selection.
+main_menu_selection(4) :- game_rules_selection.
+main_menu_selection(5) :- halt.
 
 %pvp_menu selection
 pvp_menu_selection(0) :- main_menu_selection.
 pvp_menu_selection(1) :- pvp(7).
 pvp_menu_selection(2) :- pvp(9).
 pvp_menu_selection(3) :- pvp(11).
-pvp_menu_selection(4) :- halt.
 
 %pve_menu_1 selection
 pve_menu_1_selection(0) :- main_menu_selection.
-pve_menu_1_selection(1) :- pve_menu_2_selection.
-pve_menu_1_selection(2) :- pve_menu_2_selection.
-pve_menu_1_selection(3) :- pve_menu_2_selection.
-pve_menu_1_selection(4) :- halt.
+pve_menu_1_selection(1) :- pve_menu_2_selection7.
+pve_menu_1_selection(2) :- pve_menu_2_selection9.
+pve_menu_1_selection(3) :- pve_menu_2_selection11.
 
 %pve_menu_2 selection
-pve_menu_2_selection(0) :- pve_menu_1_selection.
-pve_menu_2_selection(1) :- pve(7, easy).
-pve_menu_2_selection(2) :- pve(9, medium).
-pve_menu_2_selection(3) :- pve(11, hard).
-pve_menu_2_selection(4) :- halt.
+pve_menu_2_selection7(0) :- pve_menu_1_selection.
+pve_menu_2_selection9(0) :- pve_menu_1_selection.
+pve_menu_2_selection11(0) :- pve_menu_1_selection.
+pve_menu_2_selection7(1) :- pve_easy(7).
+pve_menu_2_selection9(1) :- pve_easy(9).
+pve_menu_2_selection11(1) :- pve_easy(11).
+pve_menu_2_selection7(2) :- pve_hard(7).
+pve_menu_2_selection9(2) :- pve_hard(9).
+pve_menu_2_selection11(2) :- pve_hard(11).
+
+%eve_menu selection
+eve_menu_selection(0) :- main_menu_selection.
+eve_menu_selection(1) :- eve(7).
+eve_menu_selection(2) :- eve(9).
+eve_menu_selection(3) :- eve(11).
 
 %game_rules selection
 game_rules_selection(0) :- main_menu_selection.
