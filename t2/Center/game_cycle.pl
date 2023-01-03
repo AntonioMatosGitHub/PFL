@@ -40,9 +40,9 @@
       - Update board with chosen move
       - Check if game over
 */
-game_cycle(_, _, Gamestate-_):-
+game_cycle(_, _, GameState-_:_):-
   write('\nCHECKING\n'),
-  game_won(GameState, Winner),
+  game_won(GameState,Winner),
   !,
   congratulate_winner(Winner).
 
