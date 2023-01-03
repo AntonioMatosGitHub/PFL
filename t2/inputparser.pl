@@ -19,6 +19,7 @@ covert_column_to_oposite_side(Number, Length, OpositeNumber) :-
     OpositeNumber is abs(N).
 
 read_move(Board,Move) :-
+  read_coordinates(Board,Move),
   repeat,
     write('Coordinates? (Row:Column) '),
     read_coordinates(Board,Move),

@@ -42,7 +42,6 @@ pvp_menu :-
   write('|                    1. Small Board   (7x7)                  | \n'),
   write('|                    2. Regular Board (9x9)                  | \n'),
   write('|                    3. Big Board    (11x11)                 | \n'),   
-  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -56,7 +55,6 @@ pve_menu_1 :-
   write('|                    1. Small Board   (7x7)                  | \n'),
   write('|                    2. Regular Board (9x9)                  | \n'),
   write('|                    3. Big Board    (11x11)                 | \n'),   
-  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -69,7 +67,6 @@ pve_menu_2 :-
   write('|                                                            | \n'),   
   write('|                         1. Dumb AI                         | \n'),
   write('|                         2. Smart AI                        | \n'), 
-  /*write('|                         3. Exit Game                       | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').
@@ -83,7 +80,6 @@ eve_menu :-
   write('|                    1. Small Board   (7x7)                  | \n'),
   write('|                    2. Regular Board (9x9)                  | \n'),
   write('|                    3. Big Board    (11x11)                 | \n'),   
-  /*write('|                    4. Exit Game                            | \n'),*/
   write('|                                                            | \n'),
   write('|                                                    0.Back  | \n'),
   write('-------------------------------------------------------------- \n').

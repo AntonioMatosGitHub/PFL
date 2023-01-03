@@ -6,6 +6,7 @@
 :- use_module('game_utils.pl').
 :- use_module('game_moves.pl').
 :- use_module('states.pl').
+:- use_module('pve.pl').
 
 %% Predicate to start a game
 %play(Size, Player,Board) :-
@@ -27,7 +28,7 @@
 %            make_move(Board, R, Col, Player, NewBoard),
 %            display_board(NewBoard),nl,
 %            play(Size, NextPlayer, NewBoard)
-%         )
+%         )over
 %     ).
 
 
@@ -39,18 +40,24 @@
       - Update board with chosen move
       - Check if game over
 */
-game_cycle(GameState-_):-
+game_cycle(_, _, Gamestate-_):-
+  write('\nCHECKING\n'),
   game_won(GameState, Winner),
   !,
   congratulate_winner(Winner).
 
-game_cycle(GameState-Players):-
+game_cycle(Turn, Size,GameState-Player1:Player2):-
   repeat,
-    choose_move(GameState,_, Move),
+    (Turn < 0
+    -> PlayerNow is Player1;
+    PlayerNow is Player2),
+    choose_move(Size, GameState,PlayerNow, Move),
     make_move(GameState, Move, NewGameState),
     display_game(NewGameState),
     !,
-    game_cycle(NewGameState-_).
+    New_Turn is -(Turn),
+    game_cycle(New_Turn, Size, NewGameState-Player1:Player2).
+
 
 /* Display Game */
 /*

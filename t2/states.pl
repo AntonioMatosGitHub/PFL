@@ -25,6 +25,7 @@ player_selector(Player) :-
 % Predicate to check if the game has been won by a player
 game_won(GameState,Winner) :-
     % Check if the center of the board is occupied by the player
+    write('\nDID HE WIN???\n'),
     GameState = Board-Player,
     length(Board, Size),
     Center is div(Size, 2),

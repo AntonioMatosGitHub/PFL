@@ -19,7 +19,7 @@ count_friendly_pieces(Board, Row, Column, Player, Count) :-
         nth0(X, RowList, Piece),
         friendly_piece(Row, Column, Y, X, Player, Piece))
     ,L),
-    write(L),
+    %write(L),
     length(L, Count).
 
 %Predicate to calculate distante from a piece to border of board
